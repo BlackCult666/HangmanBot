@@ -28,6 +28,6 @@ class MenuCallback(
         val textMessage = "<b>Word:</b> ${game.getHiddenWord()}\n\n<b>Errors:</b> 0/5"
 
         bot.editMessage(callbackQuery, textMessage, game.getKeyboard())
-        bot.answerCallback(callbackQuery, "New match started.")
+        bot.answerCallback(callbackQuery, "New match has started.")
     }
 }
