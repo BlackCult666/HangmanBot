@@ -9,6 +9,7 @@ import io.github.ageofwar.telejam.inline.InlineQueryResultArticle
 import io.github.ageofwar.telejam.inline.InputTextMessageContent
 import io.github.ageofwar.telejam.methods.AnswerInlineQuery
 import io.github.ageofwar.telejam.text.Text
+import lang.Messages
 import utils.getMenuKeyboard
 
 class StartInlineQuery(
@@ -20,39 +21,43 @@ class StartInlineQuery(
     override fun onInlineQuery(inlineQuery: InlineQuery) {
         val sender = inlineQuery.sender
 
-        if (!mongoWrapper.userExists(sender.id)) mongoWrapper.addUser(sender.id, sender.firstName)
-
         val id = inlineQuery.id
         val data = inlineQuery.query
 
         val word = data.ifEmpty { "pesce" }
         val game = gameStorage.startGame(id, word)
 
-        val textMessage = Text.parseHtml(
-            "<b>Word:</b> ${game.getHiddenWord()}\n\n<b>Errors:</b> 0/5"
+        val lang = mongoWrapper.getUserLang(sender.id)
+
+        val gameMessage = Text.parseHtml(
+            Messages.getMessage(lang, "game_message")
+                .replace("{word}", game.getHiddenWord())
+                .replace("{errors}", game.errors.toString()
+                )
         )
 
         val startMessage = Text.parseHtml(
-            "\uD83D\uDC4B\uD83C\uDFFB Hi <b>${sender.firstName}</b>,\ndo you want to start a new <b>game</b> or open the <b>settings</b>?"
+            Messages.getMessage(lang, "start_message").replace("{user}", sender.firstName)
         )
 
         val answerInlineQuery = AnswerInlineQuery()
             .inlineQuery(inlineQuery)
+            .cacheTime(0)
             .results(
                 InlineQueryResultArticle(
                     "game",
-                    "Start a new game!",
-                    InputTextMessageContent(textMessage),
+                    Messages.getMessage(lang, "inline_game_title"),
+                    InputTextMessageContent(gameMessage),
                     game.getKeyboard(),
-                    "Click here to play."
+                    ""
                 ),
 
                 InlineQueryResultArticle(
                     "start",
-                    "Open the menu",
+                    Messages.getMessage(lang, "inline_menu_title"),
                     InputTextMessageContent(startMessage),
-                    getMenuKeyboard(),
-                    "What do you want to do?"
+                    getMenuKeyboard(lang),
+                    ""
                 ),
             )
 

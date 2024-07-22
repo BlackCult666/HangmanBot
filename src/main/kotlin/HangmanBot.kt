@@ -1,5 +1,4 @@
-import callback.LetterCallback
-import callback.MenuCallback
+import callback.*
 import database.MongoWrapper
 import game.GameStorage
 import inline.StartInlineQuery
@@ -15,8 +14,11 @@ class HangmanBot(
         val gameStorage = GameStorage()
 
         events.apply {
-            registerUpdateHandler(LetterCallback(bot, gameStorage))
-            registerUpdateHandler(MenuCallback(bot, gameStorage))
+            registerUpdateHandler(LangCallback(bot, mongoWrapper))
+            registerUpdateHandler(BackCallback(bot, mongoWrapper))
+            registerUpdateHandler(StatsCallback(bot, mongoWrapper))
+            registerUpdateHandler(MenuCallback(bot, mongoWrapper, gameStorage))
+            registerUpdateHandler(LetterCallback(bot, mongoWrapper, gameStorage))
             registerUpdateHandler(StartInlineQuery(bot, mongoWrapper, gameStorage))
 
         }
