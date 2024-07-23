@@ -47,7 +47,6 @@ fun getMenuKeyboard(lang: String) : InlineKeyboardMarkup {
 }
 
 fun getStatsKeyboard(lang: String, type: String) : InlineKeyboardMarkup {
-
     val buttons = listOf(
         CallbackDataInlineKeyboardButton(Messages.getMessage(lang, "stats_${type}_button"), "stats_${type}"),
         getBackButton(lang),
@@ -56,6 +55,17 @@ fun getStatsKeyboard(lang: String, type: String) : InlineKeyboardMarkup {
     return InlineKeyboardMarkup.fromColumns(2, buttons)
 }
 
+fun getCategoryKeyboard(lang: String) : InlineKeyboardMarkup {
+    val animals = if (lang == "it") "animali" else "animals"
+    val countries = if (lang == "it") "paesi" else "countries"
+    val buttons = listOf(
+        CallbackDataInlineKeyboardButton(Messages.getMessage(lang, "category_animals_button"), "category_$animals"),
+        CallbackDataInlineKeyboardButton(Messages.getMessage(lang, "category_countries_button"), "category_$countries"),
+        getBackButton(lang)
+    )
+
+    return InlineKeyboardMarkup.fromColumns(2, buttons)
+}
 
 fun getLangKeyboard() : InlineKeyboardMarkup {
     val buttons = listOf(

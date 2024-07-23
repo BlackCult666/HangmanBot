@@ -1,5 +1,7 @@
 package game
 
+import utils.WordProvider
+
 class GameStorage {
     private var matches = mutableMapOf<String, Game>()
 

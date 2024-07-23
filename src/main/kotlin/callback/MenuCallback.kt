@@ -29,14 +29,9 @@ class MenuCallback(
     }
 
     private fun handleMatchCallback(callbackQuery: CallbackQuery, lang: String) {
-        val game = gameStorage.startGame(callbackQuery.id, "pesce")
+        val textMessage = Messages.getMessage(lang, "category_message")
 
-        val textMessage = Messages.getMessage(lang, "game_message")
-            .replace("{word}", game.getHiddenWord())
-            .replace("{errors}", game.errors.toString()
-            )
-
-        bot.editMessage(callbackQuery, textMessage, game.getKeyboard())
+        bot.editMessage(callbackQuery, textMessage, getCategoryKeyboard(lang))
         bot.answerCallback(callbackQuery, "")
     }
 
